@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gava/constants/colors.dart';
 import 'package:gava/constants/gaps.dart';
 import 'package:gava/constants/sizes.dart';
 import 'package:gava/navigation/widgets/bottom_nav_tap.dart';
+import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({
@@ -21,9 +25,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       BorderRadius.circular(Sizes.size24);
   final BorderRadius _topButtonRadius = BorderRadius.circular(Sizes.size12);
   int _selectedIndex = 0;
-
-  int _month = 3;
-  int _day = 11;
 
   final List<String> _TODOs = [
     "토양학 인강",
@@ -49,40 +50,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
-  void _changeMonthBefore() {
-    _month -= 1;
-    if (_month == 0) {
-      _month = 12;
-    }
-    setState(() {});
-  }
-
-  void _changeDayBefore() {
-    _day -= 1;
-    if (_day == 0) {
-      _day = 30;
-      _changeMonthBefore();
-    }
-    setState(() {});
-  }
-
-  void _changeMonthAfter() {
-    _month += 1;
-    if (_month == 13) {
-      _month = 1;
-    }
-    setState(() {});
-  }
-
-  void _changeDayAfter() {
-    _day += 1;
-    if (_day == 32) {
-      _day = 1;
-      _changeMonthAfter();
-    }
-    setState(() {});
-  }
-
   void _addTodoTap() {
     _TODOs.add("다음 계획 어쩌고 저쩌고 ${_TODOs.length + 1}");
     _paddingList.add(Sizes.size60);
@@ -92,23 +59,59 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Intl.defaultLocale = 'ko_KR';
+    var format = DateFormat.yMEd('ko_KR');
+    log(format.toString());
+    var dateString = format.format(DateTime.now());
+    log(dateString);
+    log(DateFormat('E', 'ko_KR').format(DateTime.now()));
+    var width = MediaQuery.of(context).size.width;
+
     return Scaffold(
         appBar: AppBar(
-          toolbarHeight: kToolbarHeight * 1.5,
+          toolbarHeight: kToolbarHeight * 1.2,
           centerTitle: true,
           title: Row(
             children: [
               Image.asset(
                 "assets/images/main_emoji.png",
-                width: 65,
+                width: 45,
               ),
               Gaps.h10,
-              Text("$username님"),
-              Gaps.h10,
-              const Text(
-                "굿모닝!",
-                style: TextStyle(
+              Text(
+                "$username님 굿모닝!",
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
+              ),
+              Expanded(child: Container()),
+              Container(
+                width: Sizes.size52,
+                decoration: BoxDecoration(
+                  color: Constant.backgroundColor,
+                  borderRadius: _topButtonRadius,
+                ),
+                child: TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    "Day",
+                    style: TextStyle(
+                      fontSize: Sizes.size16,
+                    ),
+                  ),
+                ),
+              ),
+              Gaps.h10,
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: _topButtonRadius,
+                ),
+                child: IconButton(
+                  onPressed: _addTodoTap,
+                  icon: const FaIcon(FontAwesomeIcons.plus),
+                  iconSize: Sizes.size14,
                 ),
               ),
             ],
@@ -121,54 +124,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           ),
           child: Column(
             children: [
-              Row(
-                children: [
-                  ChangeDayWidget(
-                    iconData: FontAwesomeIcons.chevronLeft,
-                    function: _changeDayBefore,
-                  ),
-                  Gaps.h10,
-                  Text(
-                    "$_month월 $_day일",
-                    style: const TextStyle(
-                      fontSize: Sizes.size16,
-                    ),
-                  ),
-                  Gaps.h10,
-                  ChangeDayWidget(
-                    iconData: FontAwesomeIcons.chevronRight,
-                    function: _changeDayAfter,
-                  ),
-                  Expanded(child: Container()),
-                  Container(
-                    width: Sizes.size52,
-                    decoration: BoxDecoration(
-                      color: Constant.backgroundColor,
-                      borderRadius: _topButtonRadius,
-                    ),
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Day",
-                        style: TextStyle(
-                          fontSize: Sizes.size16,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Gaps.h10,
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor,
-                      borderRadius: _topButtonRadius,
-                    ),
-                    child: IconButton(
-                      onPressed: _addTodoTap,
-                      icon: const FaIcon(FontAwesomeIcons.plus),
-                      iconSize: Sizes.size14,
-                    ),
-                  ),
-                ],
+              TableCalendar(
+                focusedDay: DateTime.now(),
+                firstDay: DateTime.now().subtract(const Duration(days: 7)),
+                lastDay: DateTime.now().add(const Duration(days: 7)),
+                locale: 'ko_KR',
+                calendarFormat: CalendarFormat.week,
+                // headerVisible: false,
               ),
               Gaps.v10,
               Expanded(
