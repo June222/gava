@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gava/constants/colors.dart';
 import 'package:gava/navigation/main_navigation_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 void main() {
+  Intl.defaultLocale = 'ko_KR';
   initializeDateFormatting().then((_) => runApp(const MyApp()));
   // runApp(const MyApp());
 }
