@@ -26,9 +26,6 @@ class MyApp extends StatelessWidget {
         ),
         appBarTheme: const AppBarTheme(
           backgroundColor: Colors.black,
-          titleTextStyle: TextStyle(
-            fontSize: 30,
-          ),
         ),
         textTheme: const TextTheme(
           bodyMedium: TextStyle(color: Colors.white),

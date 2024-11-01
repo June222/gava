@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gava/constants/colors.dart';
 import 'package:gava/constants/gaps.dart';
 import 'package:gava/constants/sizes.dart';
+import 'package:gava/navigation/add_plan_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -70,14 +71,24 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   void _addTodoTap() {
-    _notifications.add(
-      {
-        "todo": "다음 계획 어쩌고 저쩌고 ${_notifications.length + 1}",
-        "padding": Sizes.size60,
-        "icon": FontAwesomeIcons.accusoft,
-      },
+    // _notifications.add(
+    //   {
+    //     "todo": "다음 계획 어쩌고 저쩌고 ${_notifications.length + 1}",
+    //     "padding": Sizes.size60,
+    //     "icon": FontAwesomeIcons.accusoft,
+    //   },
+    // );
+    // setState(() {});
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const AddPlanDialog()),
     );
-    setState(() {});
+
+    // showBottomSheet(
+    //   context: context,
+    //   builder: (context) => const AddPlanDialog(),
+    // );
   }
 
   void _onFormatChanged(CalendarFormat newFormat) {
@@ -231,6 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
 
 
 // Positioned(
